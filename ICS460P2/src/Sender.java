@@ -51,7 +51,8 @@ public class Sender extends Application {
 
 	public static void main(String[] args) {
 		// if command line argument isn't provided, the default will be used
-		fileName = args.length > 0 ? args[0] : "C:\\Users\\Isaac\\eclipse-workspace\\ICS460P2\\src\\monarch_butterfly_on_flower.jpg";
+		String filePath = System.getProperty("user.dir") + "\\src\\monarch_butterfly_on_flower.jpg";
+		fileName = args.length > 0 ? args[0] : filePath;
 		Application.launch(args);
 	}
 
