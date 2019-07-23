@@ -30,8 +30,7 @@ public class Receiver {
 	private int percentageDropped = 5;
 	private static File file;
 	private Status ackStatus;
-	
-	
+
 	private JFrame frmReceiver;
 	private JTextField ipAddressInput;
 	private JTextField portInput;
@@ -63,7 +62,7 @@ public class Receiver {
 	public Receiver() {
 		initialize();
 	}
-	
+
 	public void run() {
 		receiveFile();
 	}
@@ -80,19 +79,28 @@ public class Receiver {
 	}
 
 	public byte[] numToBytes(short value) { // converts short to array of bytes
-		return ByteBuffer.allocate(2).putShort(value).array();
+		byte[] bytes = new byte[2];
+		ByteBuffer buffer = ByteBuffer.allocate(bytes.length);
+		buffer.putShort(value);
+		return buffer.array();
 	}
 
 	public byte[] numToBytes(int value) { // converts int to array of bytes
-		return ByteBuffer.allocate(4).putInt(value).array();
+		byte[] bytes = new byte[4];
+		ByteBuffer buffer = ByteBuffer.allocate(bytes.length);
+		buffer.putInt(value);
+		return buffer.array();
 	}
 
 	public short bytesToShort(byte[] elements) { // converts array of bytes to short
-		return ByteBuffer.wrap(elements).getShort();
+		ByteBuffer buffer = ByteBuffer.wrap(elements);
+		return buffer.getShort();
+
 	}
 
 	public int bytesToInt(byte[] elements) { // converts array of bytes to int
-		return ByteBuffer.wrap(elements).getInt();
+		ByteBuffer buffer = ByteBuffer.wrap(elements);
+		return buffer.getInt();
 	}
 
 	// determines status, creates, and returns datagram packet
@@ -164,7 +172,7 @@ public class Receiver {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Initialize the contents of the frame.
 	 */
@@ -292,8 +300,9 @@ public class Receiver {
 
 				if (ipAddressInput.getText().isEmpty()) {
 					ipAddressInput.setText(ipAddress);
-					JOptionPane.showMessageDialog(null, "Invalid value given for IP ADDRESS, using default: " + ipAddress);
-					
+					JOptionPane.showMessageDialog(null,
+							"Invalid value given for IP ADDRESS, using default: " + ipAddress);
+
 				} else {
 					ipAddress = ipAddressInput.getText();
 				}
@@ -301,7 +310,7 @@ public class Receiver {
 				if (portInput.getText().isEmpty()) {
 					portInput.setText(String.valueOf(port));
 					JOptionPane.showMessageDialog(null, "Invalid value given for Port, using default: " + port);
-					
+
 				} else {
 					try {
 						port = Integer.parseInt(portInput.getText());

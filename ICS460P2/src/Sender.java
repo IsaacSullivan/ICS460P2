@@ -34,12 +34,12 @@ public class Sender {
 	private static String fileName;
 	private int fileLength;
 	byte[] bytes;
-	
+
 	private JFrame frmSender;
 	private JTextField ipAddressInput;
 	private JTextField packetSizeInput;
 	private JTextField portInput;
-	
+
 	private static String ipAddress = "localhost";
 	private static int port = 1005;
 	private static short packetSize = 512;
@@ -54,7 +54,7 @@ public class Sender {
 			this.text = text;
 		}
 	}
-	
+
 	public Sender() {
 		initialize();
 	}
@@ -75,12 +75,12 @@ public class Sender {
 	}
 
 	public void run() {
-		//initialize();
+		// initialize();
 		File file = new File(fileName);
 		fileToBytes(file);
 		sendData(bytes);
 	}
-	
+
 	public Status determineStatus() { // randomly determines whether the status is VALID, CORRUPT, or DROPPED
 		double random = Math.random();
 		if (random < percentageCorrupted / 100.0) {
@@ -93,19 +93,28 @@ public class Sender {
 	}
 
 	public byte[] numToBytes(short value) { // converts short to array of bytes
-		return ByteBuffer.allocate(2).putShort(value).array();
+		byte[] bytes = new byte[2];
+		ByteBuffer buffer = ByteBuffer.allocate(bytes.length);
+		buffer.putShort(value);
+		return buffer.array();
 	}
 
 	public byte[] numToBytes(int value) { // converts int to array of bytes
-		return ByteBuffer.allocate(4).putInt(value).array();
+		byte[] bytes = new byte[4];
+		ByteBuffer buffer = ByteBuffer.allocate(bytes.length);
+		buffer.putInt(value);
+		return buffer.array();
 	}
 
 	public short bytesToShort(byte[] elements) { // converts array of bytes to short
-		return ByteBuffer.wrap(elements).getShort();
+		ByteBuffer buffer = ByteBuffer.wrap(elements);
+		return buffer.getShort();
+
 	}
 
 	public int bytesToInt(byte[] elements) { // converts array of bytes to int
-		return ByteBuffer.wrap(elements).getInt();
+		ByteBuffer buffer = ByteBuffer.wrap(elements);
+		return buffer.getInt();
 	}
 
 	public void fileToBytes(File file) { // converts file to array of bytes
@@ -124,30 +133,27 @@ public class Sender {
 
 	public byte[] joinArrays(byte[] array1, byte[] array2) {
 		byte[] united = new byte[array1.length + array2.length];
-		System.arraycopy(array1, 0, united, 0, array1.length);
-		System.arraycopy(array2, 0, united, array1.length, array2.length);
+		for (int i = 0; i < united.length; i++) {
+			united[i] = i < array1.length ? array1[i] : array2[i - array1.length];
+		}
 		return united;
 	}
 
 	public DatagramPacket createDataPacket(Packet packet) { // converts packet into datagram
-		
-		byte[] checkSumArray = numToBytes(packet.getCksum()); //takes the first two bytes in the packet and puts then in a checksum array
-		byte[] packetSizeArray = numToBytes(packet.getLen()); //takes the length of the packet and adds it to two bytes of size array
-		byte[] acknoArray = numToBytes(packet.getAckno());	  //takes the ack from the packet and adds it to four bytes in an array
-		byte[] seqnoArray = numToBytes(packet.getSeqno());    //takes the sequence number of the packet and adds it two four byte array
-		
-		byte[] combinedArray = joinArrays(checkSumArray, packetSizeArray); //combines the checksum bytes with the packet size = chcksum + size
-		combinedArray = joinArrays(combinedArray, acknoArray); //combines acknum with chcksum + size = chksum + size + ack
+		byte[] checkSumArray = numToBytes(packet.getCksum()); // takes the first two bytes in the packet and puts then in a checksum array
+		byte[] packetSizeArray = numToBytes(packet.getLen()); // takes the length of the packet and adds it to two bytes of size array
+		byte[] acknoArray = numToBytes(packet.getAckno()); // takes the ack from the packet and adds it to four bytes in an array
+		byte[] seqnoArray = numToBytes(packet.getSeqno()); // takes the sequence number of the packet and adds it two four byte array
+		byte[] combinedArray = joinArrays(checkSumArray, packetSizeArray); // combines the checksum bytes with the  packet size = chcksum + size
+		combinedArray = joinArrays(combinedArray, acknoArray); // combines acknum with chcksum + size = chksum + size + ack
 		combinedArray = joinArrays(combinedArray, seqnoArray); // combines sequence with array = seq + chsum + size + ack
-		combinedArray = joinArrays(combinedArray, packet.getData()); // appends the data to the header = [seq + chsum + size + ack] + data
-		
-		//create the packet with the array of header + data just created
+		combinedArray = joinArrays(combinedArray, packet.getData()); // appends the data to the header = [seq + chsum +  size + ack] + data
+		// create the packet with the array of header + data just created
 		return new DatagramPacket(combinedArray, combinedArray.length, host, port);
 	}
 
 	// produces printout according to the data extracted from ack datagram
 	public boolean processAck(DatagramPacket ack, int seqno) {
-		
 		byte[] chksmArray = Arrays.copyOfRange(ack.getData(), 0, 2);
 		short ackChksm = bytesToShort(chksmArray);
 		byte[] ackNumArray = Arrays.copyOfRange(ack.getData(), 4, 8);
@@ -225,7 +231,7 @@ public class Sender {
 			e.printStackTrace();
 		}
 	}
-		
+
 	/**
 	 * Initialize the contents of the frame.
 	 */
@@ -406,7 +412,8 @@ public class Sender {
 
 				if (ipAddressInput.getText().isEmpty()) {
 					ipAddressInput.setText(ipAddress);
-					JOptionPane.showMessageDialog(null, "Invalid value given for IP ADDRESS, using default: " + ipAddress);
+					JOptionPane.showMessageDialog(null,
+							"Invalid value given for IP ADDRESS, using default: " + ipAddress);
 				} else {
 					ipAddress = ipAddressInput.getText();
 				}
@@ -414,7 +421,7 @@ public class Sender {
 				if (portInput.getText().isEmpty()) {
 					portInput.setText(String.valueOf(port));
 					JOptionPane.showMessageDialog(null, "Invalid value given for Port, using default: " + port);
-					
+
 				} else {
 					try {
 						port = Integer.parseInt(portInput.getText());
@@ -425,7 +432,8 @@ public class Sender {
 
 				if (packetSizeInput.getText().isEmpty()) {
 					packetSizeInput.setText(String.valueOf(packetSize));
-					JOptionPane.showMessageDialog(null,"Invalid value given for Packet Size, using default: " + packetSize);
+					JOptionPane.showMessageDialog(null,
+							"Invalid value given for Packet Size, using default: " + packetSize);
 				} else {
 					try {
 						packetSize = Short.parseShort(packetSizeInput.getText());
