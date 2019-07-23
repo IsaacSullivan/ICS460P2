@@ -253,7 +253,7 @@ public class Sender {
 
 		// Timeout
 		// Timeout Value from slider
-		JLabel timeoutValue = new JLabel("");
+		JLabel timeoutValue = new JLabel("0");
 		timeoutValue.setForeground(Color.BLACK);
 		timeoutValue.setFont(new Font("Tahoma", Font.PLAIN, 19));
 		timeoutValue.setBackground(Color.WHITE);
@@ -327,7 +327,7 @@ public class Sender {
 		frmSender.getContentPane().add(corrutLabel);
 
 		// Corrupt value
-		JLabel corruptValue = new JLabel("");
+		JLabel corruptValue = new JLabel("0");
 		corruptValue.setForeground(Color.BLACK);
 		corruptValue.setFont(new Font("Tahoma", Font.PLAIN, 19));
 		corruptValue.setBackground(Color.WHITE);
@@ -367,7 +367,7 @@ public class Sender {
 		frmSender.getContentPane().add(droppedLabel);
 
 		// Dropped Value
-		JLabel droppedValue = new JLabel("");
+		JLabel droppedValue = new JLabel("0");
 		droppedValue.setForeground(Color.BLACK);
 		droppedValue.setFont(new Font("Tahoma", Font.PLAIN, 19));
 		droppedValue.setBackground(Color.WHITE);
