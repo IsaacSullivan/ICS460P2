@@ -1,3 +1,8 @@
+import java.awt.Color;
+import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -8,29 +13,28 @@ import java.net.InetAddress;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
-import javafx.application.Application;
-import javafx.geometry.HPos;
-import javafx.geometry.Pos;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.GridPane;
-import javafx.stage.Stage;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JSlider;
+import javax.swing.JTextField;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
-public class Receiver extends Application {
-	private TextField ipAddressField = new TextField("localhost");
-	private TextField portField = new TextField("1005");
-	private TextField percentageCorruptedField = new TextField("10");
-	private TextField percentageDroppedField = new TextField("5");
-	private Button receive = new Button("Receive");
-	private String ipAddress;
-	private int port;
+public class Receiver {
+	private String ipAddress = "localhost";
+	private int port = 1005;
 
-	private int percentageCorrupted;
-	private int percentageDropped;
-	private static File file = new File("image_received.jpg");
+	private int percentageCorrupted = 10;
+	private int percentageDropped = 5;
+	private static File file;
 	private Status ackStatus;
+	
+	
+	private JFrame frmReceiver;
+	private JTextField ipAddressInput;
+	private JTextField portInput;
 
 	private enum Status {
 		VALID((short) 0, "SENT"), CORRUPT((short) 1, "ERR"), DROPPED((short) 0, "DROP");
@@ -44,78 +48,28 @@ public class Receiver extends Application {
 	}
 
 	public static void main(String[] args) {
-		Application.launch(args);
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					Receiver window = new Receiver();
+					window.frmReceiver.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
 	}
 
-	@Override
-	public void start(Stage primaryStage) throws Exception {
-		GridPane pane = new GridPane();
-		pane.setHgap(5);
-		pane.setVgap(5);
-
-		pane.add(new Label("IP Address"), 0, 0);
-		pane.add(ipAddressField, 1, 0);
-		pane.add(new Label("Port"), 0, 1);
-		pane.add(portField, 1, 1);
-		pane.add(new Label("Dropped, %"), 0, 2);
-		pane.add(percentageDroppedField, 1, 2);
-		pane.add(new Label("Corrupted, %"), 0, 3);
-		pane.add(percentageCorruptedField, 1, 3);
-		receive.setMaxWidth(100);
-		receive.setOnAction(e -> run());
-		pane.add(receive, 1, 4);
-
-		pane.setAlignment(Pos.CENTER);
-		ipAddressField.setAlignment(Pos.BOTTOM_RIGHT);
-		portField.setAlignment(Pos.BOTTOM_RIGHT);
-		percentageCorruptedField.setAlignment(Pos.BOTTOM_RIGHT);
-		percentageDroppedField.setAlignment(Pos.BOTTOM_RIGHT);
-		GridPane.setHalignment(receive, HPos.RIGHT);
-
-		Scene scene = new Scene(pane, 250, 250);
-
-		primaryStage.setTitle("Receiver");
-		primaryStage.setScene(scene);
-		primaryStage.show();
+	public Receiver() {
+		initialize();
 	}
-
+	
 	public void run() {
-		initializeFields();
+		initialize();
 		receiveFile();
 	}
 
-	private void initializeFields() {
-		String readField = ipAddressField.getText();
-		if (!readField.equals("")) {
-			ipAddress = readField;
-		}
-		try {
-			readField = portField.getText();
-			if (!readField.equals("") && Integer.parseInt(readField) > 0) {
-				port = Integer.parseInt(readField);
-			}
-		} catch (NumberFormatException ex) {
-
-		}
-		try {
-			readField = percentageCorruptedField.getText();
-			if (!readField.equals("") && Integer.parseInt(readField) >= 0) {
-				percentageCorrupted = Integer.parseInt(readField);
-			}
-		} catch (NumberFormatException ex) {
-
-		}
-		try {
-			readField = percentageDroppedField.getText();
-			if (!readField.equals("") && Integer.parseInt(readField) >= 0) {
-				percentageDropped = Integer.parseInt(readField);
-			}
-		} catch (NumberFormatException ex) {
-
-		}
-	}
-
-	public Status determineStatus() {
+	public Status determineStatus() { // randomly determines whether the status is VALID, CORRUPT, or DROPPED
 		double random = Math.random();
 		if (random < percentageCorrupted / 100.0) {
 			return Status.CORRUPT;
@@ -126,22 +80,23 @@ public class Receiver extends Application {
 		}
 	}
 
-	public byte[] numToBytes(short value) {
+	public byte[] numToBytes(short value) { // converts short to array of bytes
 		return ByteBuffer.allocate(2).putShort(value).array();
 	}
 
-	public byte[] numToBytes(int value) {
+	public byte[] numToBytes(int value) { // converts int to array of bytes
 		return ByteBuffer.allocate(4).putInt(value).array();
 	}
 
-	public short bytesToShort(byte[] elements) {
+	public short bytesToShort(byte[] elements) { // converts array of bytes to short
 		return ByteBuffer.wrap(elements).getShort();
 	}
 
-	public int bytesToInt(byte[] elements) {
+	public int bytesToInt(byte[] elements) { // converts array of bytes to int
 		return ByteBuffer.wrap(elements).getInt();
 	}
 
+	// determines status, creates, and returns datagram packet
 	public DatagramPacket createAckPacket(ReceiverPacket packet) throws IOException {
 		ackStatus = determineStatus();
 		InetAddress host;
@@ -160,6 +115,7 @@ public class Receiver extends Application {
 		return ack;
 	}
 
+	// sends ack and prints out report
 	public void sendAck(DatagramSocket socket, ReceiverPacket packet) throws IOException {
 		DatagramPacket ackPacket = createAckPacket(packet);
 		System.out.println(
@@ -169,19 +125,20 @@ public class Receiver extends Application {
 		}
 	}
 
-	public void receiveFile() {
+	public void receiveFile() { // receives file and prints out report
 		DatagramPacket partialFile = new DatagramPacket(new byte[512], 512);
 		int nextDatagram = 1;
 		try (DatagramSocket socket = new DatagramSocket(port); OutputStream output = new FileOutputStream(file);) {
 			socket.receive(partialFile);
-			while (partialFile.getLength() > 0) {
+			while (partialFile.getLength() > 0) { // while there is more data to process
 				port = partialFile.getPort();
 				short checksum = bytesToShort(new byte[] { partialFile.getData()[0], partialFile.getData()[1] });
 				short len = bytesToShort(new byte[] { partialFile.getData()[2], partialFile.getData()[3] });
 				int ackno = bytesToInt(Arrays.copyOfRange(partialFile.getData(), 4, 8));
 				int seqno = bytesToInt(Arrays.copyOfRange(partialFile.getData(), 8, 12));
 				ReceiverPacket dataPacket = new ReceiverPacket(checksum, len, ackno);
-
+				// if actual data length in the package received is not equal to the value of
+				// the length field specified by sender, discard the package
 				if (partialFile.getLength() != len) {
 					socket.receive(partialFile);
 					continue;
@@ -207,5 +164,159 @@ public class Receiver extends Application {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize() {
+
+		file = new File("image_received.jpg");
+
+		frmReceiver = new JFrame();
+		frmReceiver.getContentPane().setBackground(Color.WHITE);
+		frmReceiver.setTitle("Receiver");
+		frmReceiver.setBounds(100, 100, 772, 640);
+		frmReceiver.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmReceiver.getContentPane().setLayout(null);
+
+		// IP Address Label
+		JLabel ipAddressLabel = new JLabel("IP Address");
+		ipAddressLabel.setFont(new Font("Tahoma", Font.BOLD, 19));
+		ipAddressLabel.setBounds(17, 19, 105, 23);
+		frmReceiver.getContentPane().add(ipAddressLabel);
+
+		// IP Address Input
+		ipAddressInput = new JTextField();
+		ipAddressInput.setToolTipText("000.000.0.0\r\n");
+		ipAddressInput.setBounds(216, 16, 166, 29);
+		frmReceiver.getContentPane().add(ipAddressInput);
+		ipAddressInput.setColumns(10);
+
+		// Port
+		// Port Label
+		JLabel portLabel = new JLabel("Port");
+		portLabel.setFont(new Font("Tahoma", Font.BOLD, 19));
+		portLabel.setBounds(13, 61, 82, 23);
+		frmReceiver.getContentPane().add(portLabel);
+
+		// Port Input
+		portInput = new JTextField();
+		portInput.setBounds(216, 58, 166, 29);
+		frmReceiver.getContentPane().add(portInput);
+		portInput.setColumns(10);
+
+		// Corrupt
+		// Corrupt Label
+		JLabel corrutLabel = new JLabel("Corrupt %");
+		corrutLabel.setFont(new Font("Tahoma", Font.BOLD, 19));
+		corrutLabel.setBounds(17, 182, 152, 23);
+		frmReceiver.getContentPane().add(corrutLabel);
+
+		// Corrupt value
+		JLabel corruptValue = new JLabel("New label");
+		corruptValue.setForeground(Color.BLACK);
+		corruptValue.setFont(new Font("Tahoma", Font.PLAIN, 19));
+		corruptValue.setBackground(Color.WHITE);
+		corruptValue.setBounds(17, 218, 82, 23);
+		frmReceiver.getContentPane().add(corruptValue);
+
+		// Corrupt Slider
+		JSlider corruptSlider = new JSlider();
+		corruptSlider.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent arg0) {
+				corruptValue.setText(Integer.toString(corruptSlider.getValue()));
+
+				if (Integer.parseInt(corruptValue.getText()) > 70) {
+					corruptValue.setForeground(Color.RED);
+				} else if (Integer.parseInt(corruptValue.getText()) > 30) {
+					corruptValue.setForeground(Color.orange);
+				} else if (Integer.parseInt(corruptValue.getText()) > 0) {
+					corruptValue.setForeground(Color.GREEN);
+				}
+			}
+		});
+
+		corruptSlider.setSnapToTicks(true);
+		corruptSlider.setBackground(Color.WHITE);
+		corruptSlider.setMajorTickSpacing(20);
+		corruptSlider.setPaintLabels(true);
+		corruptSlider.setPaintTicks(true);
+		corruptSlider.setMinorTickSpacing(10);
+		corruptSlider.setBounds(216, 182, 428, 72);
+		frmReceiver.getContentPane().add(corruptSlider);
+
+		// Dropped
+		// Dropped Label
+		JLabel droppedLabel = new JLabel("Dropped %");
+		droppedLabel.setFont(new Font("Tahoma", Font.BOLD, 19));
+		droppedLabel.setBounds(17, 386, 152, 23);
+		frmReceiver.getContentPane().add(droppedLabel);
+
+		// Dropped Value
+		JLabel droppedValue = new JLabel("New label");
+		droppedValue.setForeground(Color.BLACK);
+		droppedValue.setFont(new Font("Tahoma", Font.PLAIN, 19));
+		droppedValue.setBackground(Color.WHITE);
+		droppedValue.setBounds(17, 428, 82, 23);
+		frmReceiver.getContentPane().add(droppedValue);
+
+		// Dropped Slider
+		JSlider droppedSlider = new JSlider();
+		droppedSlider.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent arg0) {
+				droppedValue.setText(Integer.toString(droppedSlider.getValue()));
+
+				if (Integer.parseInt(droppedValue.getText()) > 70) {
+					droppedValue.setForeground(Color.RED);
+				} else if (Integer.parseInt(droppedValue.getText()) > 30) {
+					droppedValue.setForeground(Color.orange);
+				} else if (Integer.parseInt(droppedValue.getText()) > 0) {
+					droppedValue.setForeground(Color.GREEN);
+				}
+			}
+		});
+
+		droppedSlider.setSnapToTicks(true);
+		droppedSlider.setBackground(Color.WHITE);
+		droppedSlider.setMajorTickSpacing(20);
+		droppedSlider.setPaintLabels(true);
+		droppedSlider.setPaintTicks(true);
+		droppedSlider.setMinorTickSpacing(10);
+		droppedSlider.setBounds(216, 386, 428, 72);
+		frmReceiver.getContentPane().add(droppedSlider);
+
+		// SEND PRESSED
+		JButton btnSend = new JButton("RECEIVE");
+		btnSend.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent f) {
+
+				if (ipAddressInput.getText().isEmpty()) {
+					JOptionPane.showMessageDialog(null, "Invalid value given for IP ADDRESS, using default: " + ipAddress);
+					ipAddressInput.setText(ipAddress);
+				} else {
+					ipAddress = ipAddressInput.getText();
+				}
+
+				if (portInput.getText().isEmpty()) {
+					JOptionPane.showMessageDialog(null, "Invalid value given for Port, using default: " + port);
+					portInput.setText(String.valueOf(port));
+				} else {
+					try {
+						port = Integer.parseInt(portInput.getText());
+					} catch (NumberFormatException e) {
+						JOptionPane.showMessageDialog(null, "Invalid value given for Port, using default: " + port);
+					}
+				}
+
+				percentageCorrupted = Integer.parseInt(droppedValue.getText());
+				percentageDropped = Integer.parseInt(droppedValue.getText());
+
+				run();
+			}
+		});
+
+		btnSend.setBounds(327, 526, 131, 31);
+		frmReceiver.getContentPane().add(btnSend);
 	}
 }
