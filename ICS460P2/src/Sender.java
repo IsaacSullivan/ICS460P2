@@ -253,7 +253,7 @@ public class Sender {
 
 		// Timeout
 		// Timeout Value from slider
-		JLabel timeoutValue = new JLabel("New label");
+		JLabel timeoutValue = new JLabel("");
 		timeoutValue.setForeground(Color.BLACK);
 		timeoutValue.setFont(new Font("Tahoma", Font.PLAIN, 19));
 		timeoutValue.setBackground(Color.WHITE);
@@ -266,6 +266,7 @@ public class Sender {
 		frmSender.getContentPane().add(timeoutLabel);
 
 		JSlider timeOutSlider = new JSlider();
+		timeOutSlider.setValue(2000);
 		timeOutSlider.setBorder(UIManager.getBorder("TextPane.border"));
 		timeOutSlider.setBackground(Color.WHITE);
 		timeOutSlider.addChangeListener(new ChangeListener() {
@@ -326,7 +327,7 @@ public class Sender {
 		frmSender.getContentPane().add(corrutLabel);
 
 		// Corrupt value
-		JLabel corruptValue = new JLabel("New label");
+		JLabel corruptValue = new JLabel("");
 		corruptValue.setForeground(Color.BLACK);
 		corruptValue.setFont(new Font("Tahoma", Font.PLAIN, 19));
 		corruptValue.setBackground(Color.WHITE);
@@ -335,6 +336,7 @@ public class Sender {
 
 		// Corrupt Slider
 		JSlider corruptSlider = new JSlider();
+		corruptSlider.setValue(10);
 		corruptSlider.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
 				corruptValue.setText(Integer.toString(corruptSlider.getValue()));
@@ -365,7 +367,7 @@ public class Sender {
 		frmSender.getContentPane().add(droppedLabel);
 
 		// Dropped Value
-		JLabel droppedValue = new JLabel("New label");
+		JLabel droppedValue = new JLabel("");
 		droppedValue.setForeground(Color.BLACK);
 		droppedValue.setFont(new Font("Tahoma", Font.PLAIN, 19));
 		droppedValue.setBackground(Color.WHITE);
@@ -374,6 +376,7 @@ public class Sender {
 
 		// Dropped Slider
 		JSlider droppedSlider = new JSlider();
+		droppedSlider.setValue(5);
 		droppedSlider.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
 				droppedValue.setText(Integer.toString(droppedSlider.getValue()));

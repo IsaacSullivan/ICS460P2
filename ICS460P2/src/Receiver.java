@@ -175,7 +175,7 @@ public class Receiver {
 		frmReceiver = new JFrame();
 		frmReceiver.getContentPane().setBackground(Color.WHITE);
 		frmReceiver.setTitle("Receiver");
-		frmReceiver.setBounds(100, 100, 772, 410);
+		frmReceiver.setBounds(100, 100, 772, 441);
 		frmReceiver.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmReceiver.getContentPane().setLayout(null);
 
@@ -222,6 +222,7 @@ public class Receiver {
 
 		// Corrupt Slider
 		JSlider corruptSlider = new JSlider();
+		corruptSlider.setValue(5);
 		corruptSlider.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
 				corruptValue.setText(Integer.toString(corruptSlider.getValue()));
@@ -261,6 +262,7 @@ public class Receiver {
 
 		// Dropped Slider
 		JSlider droppedSlider = new JSlider();
+		droppedSlider.setValue(10);
 		droppedSlider.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
 				droppedValue.setText(Integer.toString(droppedSlider.getValue()));
