@@ -259,7 +259,7 @@ public class Sender {
 
 		// Timeout
 		// Timeout Value from slider
-		JLabel timeoutValue = new JLabel("0");
+		JLabel timeoutValue = new JLabel("2000");
 		timeoutValue.setForeground(Color.BLACK);
 		timeoutValue.setFont(new Font("Tahoma", Font.PLAIN, 19));
 		timeoutValue.setBackground(Color.WHITE);
@@ -333,7 +333,7 @@ public class Sender {
 		frmSender.getContentPane().add(corrutLabel);
 
 		// Corrupt value
-		JLabel corruptValue = new JLabel("0");
+		JLabel corruptValue = new JLabel("10");
 		corruptValue.setForeground(Color.BLACK);
 		corruptValue.setFont(new Font("Tahoma", Font.PLAIN, 19));
 		corruptValue.setBackground(Color.WHITE);
@@ -373,7 +373,7 @@ public class Sender {
 		frmSender.getContentPane().add(droppedLabel);
 
 		// Dropped Value
-		JLabel droppedValue = new JLabel("0");
+		JLabel droppedValue = new JLabel("5");
 		droppedValue.setForeground(Color.BLACK);
 		droppedValue.setFont(new Font("Tahoma", Font.PLAIN, 19));
 		droppedValue.setBackground(Color.WHITE);
@@ -444,8 +444,8 @@ public class Sender {
 				}
 
 				timeout = Integer.parseInt(timeoutValue.getText());
-				percentageCorrupted = Integer.parseInt(droppedValue.getText());
-				percentageDropped = Integer.parseInt(corruptValue.getText());
+				percentageCorrupted = Integer.parseInt(corruptValue.getText());
+				percentageDropped = Integer.parseInt(droppedValue.getText());
 
 				run();
 			}

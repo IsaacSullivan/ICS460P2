@@ -221,7 +221,7 @@ public class Receiver {
 		frmReceiver.getContentPane().add(corrutLabel);
 
 		// Corrupt value
-		JLabel corruptValue = new JLabel("0");
+		JLabel corruptValue = new JLabel("10");
 		corruptValue.setForeground(Color.BLACK);
 		corruptValue.setFont(new Font("Tahoma", Font.PLAIN, 19));
 		corruptValue.setBackground(Color.WHITE);
@@ -230,7 +230,7 @@ public class Receiver {
 
 		// Corrupt Slider
 		JSlider corruptSlider = new JSlider();
-		corruptSlider.setValue(5);
+		corruptSlider.setValue(10);
 		corruptSlider.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
 				corruptValue.setText(Integer.toString(corruptSlider.getValue()));
@@ -261,7 +261,7 @@ public class Receiver {
 		frmReceiver.getContentPane().add(droppedLabel);
 
 		// Dropped Value
-		JLabel droppedValue = new JLabel("0");
+		JLabel droppedValue = new JLabel("5");
 		droppedValue.setForeground(Color.BLACK);
 		droppedValue.setFont(new Font("Tahoma", Font.PLAIN, 19));
 		droppedValue.setBackground(Color.WHITE);
@@ -270,7 +270,7 @@ public class Receiver {
 
 		// Dropped Slider
 		JSlider droppedSlider = new JSlider();
-		droppedSlider.setValue(10);
+		droppedSlider.setValue(5);
 		droppedSlider.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
 				droppedValue.setText(Integer.toString(droppedSlider.getValue()));
