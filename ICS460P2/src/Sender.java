@@ -75,7 +75,7 @@ public class Sender {
 	}
 
 	public void run() {
-		initialize();
+		//initialize();
 		File file = new File(fileName);
 		fileToBytes(file);
 		sendData(bytes);
@@ -287,7 +287,6 @@ public class Sender {
 		timeOutSlider.setPaintTrack(true);
 		timeOutSlider.setMajorTickSpacing(1000);
 		timeOutSlider.setMinorTickSpacing(500);
-		timeOutSlider.setSnapToTicks(true);
 		timeOutSlider.setMaximum(5000);
 		timeOutSlider.setBounds(216, 291, 428, 64);
 		frmSender.getContentPane().add(timeOutSlider);
@@ -350,7 +349,6 @@ public class Sender {
 			}
 		});
 
-		corruptSlider.setSnapToTicks(true);
 		corruptSlider.setBackground(Color.WHITE);
 		corruptSlider.setMajorTickSpacing(20);
 		corruptSlider.setPaintLabels(true);
@@ -390,7 +388,6 @@ public class Sender {
 			}
 		});
 
-		droppedSlider.setSnapToTicks(true);
 		droppedSlider.setBackground(Color.WHITE);
 		droppedSlider.setMajorTickSpacing(20);
 		droppedSlider.setPaintLabels(true);
@@ -405,15 +402,16 @@ public class Sender {
 			public void actionPerformed(ActionEvent f) {
 
 				if (ipAddressInput.getText().isEmpty()) {
-					JOptionPane.showMessageDialog(null, "Invalid value given for IP ADDRESS, using default: " + ipAddress);
 					ipAddressInput.setText(ipAddress);
+					JOptionPane.showMessageDialog(null, "Invalid value given for IP ADDRESS, using default: " + ipAddress);
 				} else {
 					ipAddress = ipAddressInput.getText();
 				}
 
 				if (portInput.getText().isEmpty()) {
-					JOptionPane.showMessageDialog(null, "Invalid value given for Port, using default: " + port);
 					portInput.setText(String.valueOf(port));
+					JOptionPane.showMessageDialog(null, "Invalid value given for Port, using default: " + port);
+					
 				} else {
 					try {
 						port = Integer.parseInt(portInput.getText());
@@ -423,12 +421,11 @@ public class Sender {
 				}
 
 				if (packetSizeInput.getText().isEmpty()) {
-					JOptionPane.showMessageDialog(null,
-							"Invalid value given for Packet Size, using default: " + packetSize);
 					packetSizeInput.setText(String.valueOf(packetSize));
+					JOptionPane.showMessageDialog(null,"Invalid value given for Packet Size, using default: " + packetSize);
 				} else {
 					try {
-						packetSize = Short.parseShort(portInput.getText());
+						packetSize = Short.parseShort(packetSizeInput.getText());
 					} catch (NumberFormatException e) {
 						JOptionPane.showMessageDialog(null,
 								"Invalid value given for Packet Size, using default: " + packetSize);
@@ -437,7 +434,7 @@ public class Sender {
 
 				timeout = Integer.parseInt(timeoutValue.getText());
 				percentageCorrupted = Integer.parseInt(droppedValue.getText());
-				percentageDropped = Integer.parseInt(droppedValue.getText());
+				percentageDropped = Integer.parseInt(corruptValue.getText());
 
 				run();
 			}

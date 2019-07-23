@@ -65,7 +65,6 @@ public class Receiver {
 	}
 	
 	public void run() {
-		initialize();
 		receiveFile();
 	}
 
@@ -214,7 +213,7 @@ public class Receiver {
 		frmReceiver.getContentPane().add(corrutLabel);
 
 		// Corrupt value
-		JLabel corruptValue = new JLabel("New label");
+		JLabel corruptValue = new JLabel("0");
 		corruptValue.setForeground(Color.BLACK);
 		corruptValue.setFont(new Font("Tahoma", Font.PLAIN, 19));
 		corruptValue.setBackground(Color.WHITE);
@@ -237,7 +236,6 @@ public class Receiver {
 			}
 		});
 
-		corruptSlider.setSnapToTicks(true);
 		corruptSlider.setBackground(Color.WHITE);
 		corruptSlider.setMajorTickSpacing(20);
 		corruptSlider.setPaintLabels(true);
@@ -277,7 +275,6 @@ public class Receiver {
 			}
 		});
 
-		droppedSlider.setSnapToTicks(true);
 		droppedSlider.setBackground(Color.WHITE);
 		droppedSlider.setMajorTickSpacing(20);
 		droppedSlider.setPaintLabels(true);
@@ -292,15 +289,17 @@ public class Receiver {
 			public void actionPerformed(ActionEvent f) {
 
 				if (ipAddressInput.getText().isEmpty()) {
-					JOptionPane.showMessageDialog(null, "Invalid value given for IP ADDRESS, using default: " + ipAddress);
 					ipAddressInput.setText(ipAddress);
+					JOptionPane.showMessageDialog(null, "Invalid value given for IP ADDRESS, using default: " + ipAddress);
+					
 				} else {
 					ipAddress = ipAddressInput.getText();
 				}
 
 				if (portInput.getText().isEmpty()) {
-					JOptionPane.showMessageDialog(null, "Invalid value given for Port, using default: " + port);
 					portInput.setText(String.valueOf(port));
+					JOptionPane.showMessageDialog(null, "Invalid value given for Port, using default: " + port);
+					
 				} else {
 					try {
 						port = Integer.parseInt(portInput.getText());
