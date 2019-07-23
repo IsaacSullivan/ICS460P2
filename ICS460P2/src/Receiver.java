@@ -176,14 +176,14 @@ public class Receiver {
 		frmReceiver = new JFrame();
 		frmReceiver.getContentPane().setBackground(Color.WHITE);
 		frmReceiver.setTitle("Receiver");
-		frmReceiver.setBounds(100, 100, 772, 640);
+		frmReceiver.setBounds(100, 100, 772, 410);
 		frmReceiver.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmReceiver.getContentPane().setLayout(null);
 
 		// IP Address Label
 		JLabel ipAddressLabel = new JLabel("IP Address");
 		ipAddressLabel.setFont(new Font("Tahoma", Font.BOLD, 19));
-		ipAddressLabel.setBounds(17, 19, 105, 23);
+		ipAddressLabel.setBounds(13, 15, 105, 23);
 		frmReceiver.getContentPane().add(ipAddressLabel);
 
 		// IP Address Input
@@ -210,7 +210,7 @@ public class Receiver {
 		// Corrupt Label
 		JLabel corrutLabel = new JLabel("Corrupt %");
 		corrutLabel.setFont(new Font("Tahoma", Font.BOLD, 19));
-		corrutLabel.setBounds(17, 182, 152, 23);
+		corrutLabel.setBounds(13, 109, 152, 23);
 		frmReceiver.getContentPane().add(corrutLabel);
 
 		// Corrupt value
@@ -218,7 +218,7 @@ public class Receiver {
 		corruptValue.setForeground(Color.BLACK);
 		corruptValue.setFont(new Font("Tahoma", Font.PLAIN, 19));
 		corruptValue.setBackground(Color.WHITE);
-		corruptValue.setBounds(17, 218, 82, 23);
+		corruptValue.setBounds(13, 143, 82, 23);
 		frmReceiver.getContentPane().add(corruptValue);
 
 		// Corrupt Slider
@@ -243,14 +243,14 @@ public class Receiver {
 		corruptSlider.setPaintLabels(true);
 		corruptSlider.setPaintTicks(true);
 		corruptSlider.setMinorTickSpacing(10);
-		corruptSlider.setBounds(216, 182, 428, 72);
+		corruptSlider.setBounds(216, 109, 428, 72);
 		frmReceiver.getContentPane().add(corruptSlider);
 
 		// Dropped
 		// Dropped Label
 		JLabel droppedLabel = new JLabel("Dropped %");
 		droppedLabel.setFont(new Font("Tahoma", Font.BOLD, 19));
-		droppedLabel.setBounds(17, 386, 152, 23);
+		droppedLabel.setBounds(13, 190, 152, 23);
 		frmReceiver.getContentPane().add(droppedLabel);
 
 		// Dropped Value
@@ -258,7 +258,7 @@ public class Receiver {
 		droppedValue.setForeground(Color.BLACK);
 		droppedValue.setFont(new Font("Tahoma", Font.PLAIN, 19));
 		droppedValue.setBackground(Color.WHITE);
-		droppedValue.setBounds(17, 428, 82, 23);
+		droppedValue.setBounds(13, 224, 82, 23);
 		frmReceiver.getContentPane().add(droppedValue);
 
 		// Dropped Slider
@@ -283,7 +283,7 @@ public class Receiver {
 		droppedSlider.setPaintLabels(true);
 		droppedSlider.setPaintTicks(true);
 		droppedSlider.setMinorTickSpacing(10);
-		droppedSlider.setBounds(216, 386, 428, 72);
+		droppedSlider.setBounds(216, 192, 428, 72);
 		frmReceiver.getContentPane().add(droppedSlider);
 
 		// SEND PRESSED
@@ -309,14 +309,14 @@ public class Receiver {
 					}
 				}
 
-				percentageCorrupted = Integer.parseInt(droppedValue.getText());
+				percentageCorrupted = Integer.parseInt(corruptValue.getText());
 				percentageDropped = Integer.parseInt(droppedValue.getText());
 
 				run();
 			}
 		});
 
-		btnSend.setBounds(327, 526, 131, 31);
+		btnSend.setBounds(282, 324, 131, 31);
 		frmReceiver.getContentPane().add(btnSend);
 	}
 }
