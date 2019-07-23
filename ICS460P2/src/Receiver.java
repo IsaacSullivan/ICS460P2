@@ -253,7 +253,7 @@ public class Receiver {
 		frmReceiver.getContentPane().add(droppedLabel);
 
 		// Dropped Value
-		JLabel droppedValue = new JLabel("New label");
+		JLabel droppedValue = new JLabel("0");
 		droppedValue.setForeground(Color.BLACK);
 		droppedValue.setFont(new Font("Tahoma", Font.PLAIN, 19));
 		droppedValue.setBackground(Color.WHITE);
